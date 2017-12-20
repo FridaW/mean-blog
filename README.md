@@ -2,7 +2,10 @@
 
 This is an application demonstrating the basic components needed for a Single Page Application using MongoDB, ExpressJS, Angular 2, and NodeJS.
 
-A working example can be found [here](https://damp-bastion-39490.herokuapp.com/). Additionally, a YouTube tutorial series illustrating how to create this application from scratch can be found [here](https://youtu.be/pDYhwfi7VU0).
+This applications demonstrates how to setup a RESTful API using NodeJS with Angular 2 Frontend. The application features a blog feed, where users can post comments, like posts, dislike posts, and create/edit/delete their own blog posts. For this part, a YouTube tutorial series illustrating how to create this application from scratch can be found [here](https://youtu.be/pDYhwfi7VU0).
+
+Based on that, the application has other features, such like authentication and basic ACL (Admin, User ang guest).
+
 
 ## Requirements
 
@@ -51,10 +54,4 @@ $ npm start
 -- Access API at: http://localhost:8080
 
 
-## Contributors
-
-David Acosta.
-
-## License
-
-No license.
+# mean-stack-blog-acl-auth
