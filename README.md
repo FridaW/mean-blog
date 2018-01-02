@@ -6,6 +6,7 @@ This applications demonstrates how to setup a RESTful API using NodeJS with Angu
 
 Based on that, the application has other features, such like authentication and basic ACL (Admin, User ang guest).
 
+Admin can have the permission to promote user to manager, demote manager to user. The application also has organization collections.
 
 ## Requirements
 
@@ -55,5 +56,3 @@ $ npm start
 
 
 
-# assign-role-permission-mean
-# assign-role-permission-mean
