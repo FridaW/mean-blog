@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 import { BlogService } from '../../../services/blog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,9 +15,12 @@ export class DeleteBlogComponent implements OnInit {
   processing = false;
   blog;
   currentUrl;
+  username;
+  role;
 
   constructor(
     private blogService: BlogService,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
@@ -25,6 +29,10 @@ export class DeleteBlogComponent implements OnInit {
   deleteBlog() {
     this.processing = true; // Disable buttons
     // Function for DELETE request
+    this.authService.getProfile().subscribe(profile => {
+      this.username = profile.user.username; // Used when creating new blog posts and comments
+      this.role = profile.user.role;
+    });
     this.blogService.deleteBlog(this.currentUrl.id).subscribe(data => {
       // Check if delete request worked
       if (!data.success) {

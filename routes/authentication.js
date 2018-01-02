@@ -1,4 +1,5 @@
 const User = require('../models/user'); // Import User Model Schema
+const Organization = require('../models/organization'); // Import User Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/database'); // Import database configuration
 
@@ -19,44 +20,70 @@ module.exports = (router) => {
         if (!req.body.password) {
           res.json({ success: false, message: 'You must provide a password' }); // Return error
         } else {
-          // Create new user object and apply user input
-          let user = new User({
-            email: req.body.email.toLowerCase(),
-            username: req.body.username.toLowerCase(),
-            password: req.body.password
-          });
-          // Save user to database
-          user.save((err) => {
-            // Check if error occured
+          var userOrganization;
+          Organization.findOne({ name: req.body.organization}, (err, organization) => {
             if (err) {
-              // Check if error is an error indicating duplicate account
-              if (err.code === 11000) {
-                res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
-              } else {
-                // Check if error is a validation rror
-                if (err.errors) {
-                  // Check if validation error is in the email field
-                  if (err.errors.email) {
-                    res.json({ success: false, message: err.errors.email.message }); // Return error
+              res.json({ success: false, message: err }); // Return connection error
+            } else {
+              // Create new user object and apply user input
+              let user = new User({
+                email: req.body.email.toLowerCase(),
+                username: req.body.username.toLowerCase(),
+                password: req.body.password,
+                role: getAdmin(req.body.username.toLowerCase()),
+                organization: {
+                  orgId: organization._id,
+                  name: organization.name,
+                  codeName: organization.codeName
+                }          
+              });
+              function getAdmin(username) {
+                const defaultAdmin = ['frida', 'guo'];
+                const defaultManager = ['water', 'sky'];
+                if (defaultAdmin.indexOf(username) > -1) {
+                  return 'admin';
+                } 
+                else if (defaultManager.indexOf(username) > -1){
+                  return 'manager';
+                } 
+                else {
+                  return 'user';
+                }
+              }
+              // Save user to database
+              user.save((err) => {
+                // Check if error occured
+                if (err) {
+                  // Check if error is an error indicating duplicate account
+                  if (err.code === 11000) {
+                    res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
                   } else {
-                    // Check if validation error is in the username field
-                    if (err.errors.username) {
-                      res.json({ success: false, message: err.errors.username.message }); // Return error
-                    } else {
-                      // Check if validation error is in the password field
-                      if (err.errors.password) {
-                        res.json({ success: false, message: err.errors.password.message }); // Return error
+                    // Check if error is a validation rror
+                    if (err.errors) {
+                      // Check if validation error is in the email field
+                      if (err.errors.email) {
+                        res.json({ success: false, message: err.errors.email.message }); // Return error
                       } else {
-                        res.json({ success: false, message: err }); // Return any other error not already covered
+                        // Check if validation error is in the username field
+                        if (err.errors.username) {
+                          res.json({ success: false, message: err.errors.username.message }); // Return error
+                        } else {
+                          // Check if validation error is in the password field
+                          if (err.errors.password) {
+                            res.json({ success: false, message: err.errors.password.message }); // Return error
+                          } else {
+                            res.json({ success: false, message: err }); // Return any other error not already covered
+                          }
+                        }
                       }
+                    } else {
+                      res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
                     }
                   }
                 } else {
-                  res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
+                  res.json({ success: true, message: 'Acount registered!' }); // Return success
                 }
-              }
-            } else {
-              res.json({ success: true, message: 'Acount registered!' }); // Return success
+              });
             }
           });
         }
@@ -145,9 +172,12 @@ module.exports = (router) => {
                   message: 'Success!',
                   token: token,
                   user: {
-                    username: user.username
-                  }
-                }); // Return success and token to frontend
+                    username: user.username,
+                    role: user.role
+                  },
+                 
+                })
+                // Return success and token to frontend
               }
             }
           }
@@ -156,6 +186,64 @@ module.exports = (router) => {
     }
   });
 
+  /* ===============================================================
+  Route to get user's dashboard data
+  =============================================================== */
+  router.post('/dashboard', (req, res) => {
+    // Search for user in database
+    if(req.body.role === 'admin' || req.body.role === 'manager') {
+      User.find().select('username role').exec((err, user) => {
+      // Check if error connecting
+      if (err) {
+        res.json({ success: false, message: err }); // Return error
+      } else {
+        // Check if user was found in database
+        if (!user) {
+          res.json({ success: false, message: 'User not found' }); // Return error, user was not found in db
+        } else {
+          res.json({ success: true, users: user }); // Return success, send user object to frontend for profile
+        }
+      }
+      });
+    } 
+    else {
+      res.json({ success: false, message: 'you are not admin'});
+    }
+  });
+  /* ===============================================================
+     Route to get organization list from database
+  =============================================================== */
+  router.get('/organization', (req, res) => {
+      // Look for list of organization in database
+      Organization.find().exec((err, organization) => { // Check if connection error was found
+        if (err) {
+          res.json({ success: false, message: err }); // Return connection error
+        } else {
+          // return organization list
+          res.json({ success: true, organizations: organization }); // Return as taken username
+        }
+      });
+  });
+
+  /* ===============================================================
+  Route to udpate user role change
+  =============================================================== */
+  router.put('/authorizationChange', (req, res) => {
+    if(req.body.author.role === 'admin') {
+      User.update(
+        { username: req.body.user.username },
+        { $set: { role: req.body.user.role } },
+        (err, user) => {
+          if (err) {
+            res.json({ success: false, message: err }); // Return error
+          } else {
+            res.json({ success: true, message: 'user role has been udpated succesfully' }); // Return success
+          }
+        })
+    } else {
+      res.json({ success: false, message: 'you are not admin'});
+    }
+  });
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
   ================================================ */
@@ -183,7 +271,7 @@ module.exports = (router) => {
   =============================================================== */
   router.get('/profile', (req, res) => {
     // Search for user in database
-    User.findOne({ _id: req.decoded.userId }).select('username email').exec((err, user) => {
+    User.findOne({ _id: req.decoded.userId }).select('username email role').exec((err, user) => {
       // Check if error connecting
       if (err) {
         res.json({ success: false, message: err }); // Return error
@@ -193,6 +281,7 @@ module.exports = (router) => {
           res.json({ success: false, message: 'User not found' }); // Return error, user was not found in db
         } else {
           res.json({ success: true, user: user }); // Return success, send user object to frontend for profile
+
         }
       }
     });
@@ -201,6 +290,7 @@ module.exports = (router) => {
   /* ===============================================================
      Route to get user's public profile data
   =============================================================== */
+ /*
   router.get('/publicProfile/:username', (req, res) => {
     // Check if username was passed in the parameters
     if (!req.params.username) {
@@ -222,6 +312,7 @@ module.exports = (router) => {
       });
     }
   });
+*/
 
   return router; // Return router object to main index.js
 }

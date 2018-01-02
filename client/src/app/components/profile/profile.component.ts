@@ -10,6 +10,7 @@ export class ProfileComponent implements OnInit {
 
   username = '';
   email = '';
+  role = '';
 
   constructor(
     private authService: AuthService
@@ -20,6 +21,7 @@ export class ProfileComponent implements OnInit {
     this.authService.getProfile().subscribe(profile => {
       this.username = profile.user.username; // Set username
       this.email = profile.user.email; // Set e-mail
+      this.role = profile.user.role; // Set role
     });
   }
 

@@ -18,6 +18,7 @@ export class BlogComponent implements OnInit {
   commentForm;
   processing = false;
   username;
+  role;
   blogPosts;
   newComment = [];
   enabledComments = [];
@@ -221,6 +222,7 @@ export class BlogComponent implements OnInit {
     // Get profile username on page load
     this.authService.getProfile().subscribe(profile => {
       this.username = profile.user.username; // Used when creating new blog posts and comments
+      this.role = profile.user.role;
     });
 
     this.getAllBlogs(); // Get all blogs on component load

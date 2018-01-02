@@ -67,6 +67,19 @@
     </div>
   </div>
 
+  <!-- Organization selection -->
+  <div class="form-group">
+    <label for="organization">Organization List</label>
+    <select [ngClass]="{'has-error': (form.controls.organization.errors), 'has-success': !form.controls.organization.errors}" class="form-control" id="organization" formControlName="organization">
+      <option> Please select your organization</option>
+      <option *ngFor="let organization of organizationList">{{organization.name}}</option>
+    </select>
+    <!-- Validation -->
+    <ul class="help-block">
+      <li *ngIf="form.controls.organization.errors?.required">This field is required</li>
+    </ul>
+  </div>
+
   <!-- Submit Input -->
   <input [disabled]="!form.valid || processing || !emailValid || !usernameValid" type="submit" class="btn btn-primary" value="Submit" />
 

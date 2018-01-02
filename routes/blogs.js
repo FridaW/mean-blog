@@ -105,7 +105,7 @@ module.exports = (router) => {
                   res.json({ success: false, message: 'Unable to authenticate user' }); // Return error message
                 } else {
                   // Check if the user who requested single blog is the one who created it
-                  if (user.username !== blog.createdBy) {
+                  if (user.username !== blog.createdBy && user.role !== 'admin') {
                     res.json({ success: false, message: 'You are not authorized to edit this blog.' }); // Return authentication reror
                   } else {
                     res.json({ success: true, blog: blog }); // Return success
@@ -148,7 +148,7 @@ module.exports = (router) => {
                   res.json({ success: false, message: 'Unable to authenticate user.' }); // Return error message
                 } else {
                   // Check if user logged in the the one requesting to update blog post
-                  if (user.username !== blog.createdBy) {
+                  if (user.username !== blog.createdBy && user.role !== 'admin') {
                     res.json({ success: false, message: 'You are not authorized to edit this blog post.' }); // Return error message
                   } else {
                     blog.title = req.body.title; // Save latest blog title
@@ -202,8 +202,9 @@ module.exports = (router) => {
                 if (!user) {
                   res.json({ success: false, message: 'Unable to authenticate user.' }); // Return error message
                 } else {
+                  debugger;
                   // Check if user attempting to delete blog is the same user who originally posted the blog
-                  if (user.username !== blog.createdBy) {
+                  if (user.username !== blog.createdBy && user.role !== 'admin') {
                     res.json({ success: false, message: 'You are not authorized to delete this blog post' }); // Return error message
                   } else {
                     // Remove the blog from database

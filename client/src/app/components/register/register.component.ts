@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit {
   emailMessage;
   usernameValid;
   usernameMessage;
+  organizationList;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,6 +53,11 @@ export class RegisterComponent implements OnInit {
         Validators.maxLength(35), // Maximum length is 35 characters
         this.validatePassword // Custom validation
       ])],
+      // Organization Input
+      organization: ['', Validators.compose([
+        Validators.required, // Field is required
+        this.validateOrganization
+      ])],
       // Confirm Password Input
       confirm: ['', Validators.required] // Field is required
     }, { validator: this.matchingPasswords('password', 'confirm') }); // Add custom validator to form for matching passwords
@@ -62,6 +69,7 @@ export class RegisterComponent implements OnInit {
     this.form.controls['username'].disable();
     this.form.controls['password'].disable();
     this.form.controls['confirm'].disable();
+    this.form.controls['organization'].disable();
   }
 
   // Function to enable the registration form
@@ -70,6 +78,7 @@ export class RegisterComponent implements OnInit {
     this.form.controls['username'].enable();
     this.form.controls['password'].enable();
     this.form.controls['confirm'].enable();
+    this.form.controls['organization'].enable();
   }
 
   // Function to validate e-mail is proper format
@@ -120,6 +129,16 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  // Function to ensure organization is selected 
+  validateOrganization(controls) {
+    if(controls.value) {
+      console.log(controls.value);
+      return null;
+    } else {
+      return { 'validateOrganization': true };
+    } 
+  }
+
   // Function to submit form
   onRegisterSubmit() {
     this.processing = true; // Used to notify HTML that form is in processing, so that it can be disabled
@@ -128,7 +147,8 @@ export class RegisterComponent implements OnInit {
     const user = {
       email: this.form.get('email').value, // E-mail input field
       username: this.form.get('username').value, // Username input field
-      password: this.form.get('password').value // Password input field
+      password: this.form.get('password').value, // Password input field
+      organization: this.form.get('organization').value // organization select field
     }
 
     // Function from authentication service to register user
@@ -182,6 +202,10 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.authService.getOrganization().subscribe(data => {
+      this.organizationList = data.organizations;
+    });
+    console.log(this.form);
   }
 
 }

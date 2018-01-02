@@ -39,6 +39,11 @@ export class AuthService {
     return this.http.post(this.domain + 'authentication/register', user).map(res => res.json());
   }
 
+  // Function to get org data
+  getOrganization() {
+    return this.http.get(this.domain + 'authentication/organization').map(res => res.json());
+  }
+  
   // Function to check if username is taken
   checkUsername(username) {
     return this.http.get(this.domain + 'authentication/checkUsername/' + username).map(res => res.json());
@@ -52,6 +57,18 @@ export class AuthService {
   // Function to login user
   login(user) {
     return this.http.post(this.domain + 'authentication/login', user).map(res => res.json());
+  }
+
+  // Function to get dashboard data
+  getDashboard() {
+    this.createAuthenticationHeaders(); // Create headers before sending to API    
+    return this.http.post(this.domain + 'authentication/dashboard', this.user).map(res => res.json());
+  }
+
+  // Function to change user role
+  authorizationChange(user) {
+    let users = {'user' : user, 'author': this.user};
+    return this.http.put(this.domain + 'authentication/authorizationChange', users).map(res => res.json());
   }
 
   // Function to logout
@@ -71,8 +88,9 @@ export class AuthService {
 
   // Function to get user's profile data
   getProfile() {
-    this.createAuthenticationHeaders(); // Create headers before sending to API
+    this.createAuthenticationHeaders(); // Create headers before sending to API    
     return this.http.get(this.domain + 'authentication/profile', this.options).map(res => res.json());
+
   }
 
   // Function to get public profile data

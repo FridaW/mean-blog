@@ -1,1 +1,47 @@
-<h1 class="page-header">Dashboard Route</h1>
+<h1 class="page-header">Dashboard</h1>
+<!-- Custom Success/Error Message -->
+<div class="row show-hide-message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+<p>Manage your users.</p>
+    <table class="table">
+    	<tr>
+    		<!--<th>#</th>-->
+    		<th>Username</th>
+    		<th>Role</th>
+            <th>Operations</th>
+    	</tr>
+    		
+    	<tr *ngFor="let user of users; trackBy: user">
+    		<!--<td></td>-->
+    		<td>{{user.username}}</td>
+    		<td>{{user.role}}</td>
+            <td><button type="button" *ngIf="user.role !== 'admin'" class='btn btn-{{user.operation}}' 
+                (click)="changeRole(user)">{{user.operation}}</button></td>
+    	</tr>
+    </table>
+
+<!-- <div class="modal fade" id="confimationBox">
+  data-toggle="modal" data-target="#confimationBox" data-user="user"
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">confirmation</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        Are you sure to change the role of 
+      </div>
+
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  (click)="changeRole(user)">Save changes</button>
+      </div>
+
+    </div>
+  </div>
+</div> -->
