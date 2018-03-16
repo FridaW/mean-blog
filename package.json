@@ -25,11 +25,16 @@
   },
   "homepage": "https://github.com/gugui3z24/MEAN-Stack-With-Angular-2-Tutorial#readme",
   "dependencies": {
+    "@types/jquery": "^3.3.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "cors": "^2.8.3",
-    "express": "^4.15.3",
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
     "jsonwebtoken": "^7.4.1",
-    "mongoose": "^4.10.2"
+    "mongoose": "^4.13.12"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.7.3"
   }
 }

@@ -12,6 +12,7 @@ export class ProfileComponent implements OnInit {
   email = '';
   role = '';
 
+
   constructor(
     private authService: AuthService
   ) { }
@@ -23,6 +24,7 @@ export class ProfileComponent implements OnInit {
       this.email = profile.user.email; // Set e-mail
       this.role = profile.user.role; // Set role
     });
+    
   }
 
 }

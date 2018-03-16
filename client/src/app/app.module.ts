@@ -22,6 +22,7 @@ import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.compone
 import { DeleteBlogComponent } from './components/blog/delete-blog/delete-blog.component';
 import { PublicProfileComponent } from './components/public-profile/public-profile.component';
 import { AppModalComponent } from './components/app-modal/app-modal.component';
+import { OrganizationComponent } from './components/organization/organization.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { AppModalComponent } from './components/app-modal/app-modal.component';
     EditBlogComponent,
     DeleteBlogComponent,
     PublicProfileComponent,
-    AppModalComponent
+    AppModalComponent,
+    OrganizationComponent
   ],
   imports: [
     BrowserModule,

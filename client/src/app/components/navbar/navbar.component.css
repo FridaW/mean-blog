@@ -1,12 +1,13 @@
 
 @media (min-width: 768px){
 .navbar-brand{
-	position: absolute;
+	display: none;
+	/*position: absolute;
     left: 0;
     top: 15%;
     width: 100%;
     text-align: center;
-    font-size: 30px;
+    font-size: 30px;*/
 }
 .nav.navbar-nav.navbar-left {
     position: absolute;

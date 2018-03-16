@@ -41,6 +41,7 @@ export class AuthService {
 
   // Function to get org data
   getOrganization() {
+    this.createAuthenticationHeaders(); // Create headers before sending to API    
     return this.http.get(this.domain + 'authentication/organization').map(res => res.json());
   }
   

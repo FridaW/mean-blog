@@ -207,23 +207,29 @@ module.exports = (router) => {
       });
     } 
     else {
-      res.json({ success: false, message: 'you are not admin'});
+      res.json({ success: false, message: 'you are not admin or manager'});
     }
   });
   /* ===============================================================
      Route to get organization list from database
   =============================================================== */
-  router.get('/organization', (req, res) => {
+  router.post('/organization', (req, res) => {
+    if(req.body.role === 'admin' || req.body.role === 'manager') {
       // Look for list of organization in database
-      Organization.find().exec((err, organization) => { // Check if connection error was found
+      Organization.find().select('name').exec((err, organization) => { // Check if connection error was found
         if (err) {
           res.json({ success: false, message: err }); // Return connection error
         } else {
           // return organization list
-          res.json({ success: true, organizations: organization }); // Return as taken username
+          res.json({ success: true, organizations: organization}); // Return success, send organization object to frontend for profile
         }
-      });
+    });
+  } 
+  else {
+      res.json({ success: false, message: 'you are not admin or manager'});
+    }
   });
+
 
   /* ===============================================================
   Route to udpate user role change
