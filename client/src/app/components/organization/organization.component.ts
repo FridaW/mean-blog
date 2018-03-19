@@ -17,8 +17,11 @@ export class OrganizationComponent implements OnInit {
 
   ngOnInit() {
   	this.authService.getOrganization().subscribe(organizationsProfile => {
-     this.organizations = organizationsProfile.organizations || [];
-  });
+    this.organizations = organizationsProfile.organizations || [];
+    });
+  }
 
+  trackByFn(index, item) {
+    return index;
+  }
 }
-
