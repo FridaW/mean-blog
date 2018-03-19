@@ -1,0 +1,14 @@
+.navbar-right {
+	position: relative;
+	top: 20px;
+}
+
+.addMember {
+	color: #777777;
+}
+
+#shareButton {
+	padding: 0;
+	margin-top: 10px;
+	font-weight: bold;
+}

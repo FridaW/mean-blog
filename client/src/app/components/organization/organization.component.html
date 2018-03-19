@@ -12,7 +12,7 @@
 			</tr>
 			<tr *ngFor="let organization of organizations; trackBy: organization">
 				<td>{{ organization.name }}</td>
-				<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button type="button" class="btn navbar-right addOrgButton">Setup</button></td>
+				<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button type="button" class="btn navbar-right addOrgButton" [routerLink]="['/setup/']">Setup</button></td>
 				
 			</tr>
 		</table>

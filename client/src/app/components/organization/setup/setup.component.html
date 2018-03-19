@@ -1,0 +1,81 @@
+<div class="container-fluid">
+
+		<ul class="nav navbar-nav navbar-left">
+			<li><h2>Members</h2></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><button type="button" class="btn navbar-right addMember" data-toggle="modal" data-target="#addMember">Add New Member</button></li>
+		</ul>
+
+		<div class="row">
+			<table class="orgTable">	
+				<tr *ngFor="let organization of organizations; trackBy: organization">
+					<td>{{ organization.name }}</td>
+					<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button type="button" class="btn navbar-right addOrgButton" [routerLink]="['/setup/']">Setup</button></td>					
+				</tr>
+			</table>
+		</div>
+
+
+</div>
+
+
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="addMember" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <form>
+          	<div class="form-group">
+          		<label for="firstname">First Name:</label>          		
+	          	<input type="text" class="form-control" id="firstname"><br>
+	          	<label for="lastname">Last Name:</label>
+	          	<input type="text" class="form-control" id="lastname"><br>
+	          	<label for="email">Email:</label>
+	          	<input type="text" class="form-control" id="email"><br>
+	          	<label for="role">Role:</label>
+	          	<select id="role">
+				<option value="user">User</option>
+				<option value="manager">Manager</option>
+			</select><br>
+			<button type="button" class="btn link" data-toggle="collapse" data-target="#share" id="shareButton">share</button>
+			  <div id="share" class="collapse">
+			    <ul>
+			    	<input type="text" name="registerLink" title="First Name" style="color:#888;" value="http://localhost:4200/register" />
+			    	
+			    	<button id="copied">Copy to Clipboard</button>			    	
+			    </ul>
+			  </div>
+          	</div>
+
+
+          	
+        </form>
+
+          	<!-- <button type="button" class="btn navbar-right addMember">Share</button> -->
+          	<div class="container">
+			  
+			</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#save">Save</button>
+          
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+
+
