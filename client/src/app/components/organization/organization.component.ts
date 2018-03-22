@@ -19,9 +19,13 @@ export class OrganizationComponent implements OnInit {
   	this.authService.getOrganization().subscribe(organizationsProfile => {
     this.organizations = organizationsProfile.organizations || [];
     });
+
   }
 
-  trackByFn(index, item) {
-    return index;
+   getOrgname() {
+    console.log(this.organizations.name)
   }
+
+
+
 }

@@ -201,7 +201,7 @@ module.exports = (router) => {
         if (!user) {
           res.json({ success: false, message: 'User not found' }); // Return error, user was not found in db
         } else {
-          res.json({ success: true, users: user }); // Return success, send user object to frontend for profile
+          res.json({ success: true, users: user }); // Return success, send user object to frontend for dashboard
         }
       }
       });
@@ -213,22 +213,18 @@ module.exports = (router) => {
   /* ===============================================================
      Route to get organization list from database
   =============================================================== */
-  router.post('/organization', (req, res) => {
-    if(req.body.role === 'admin' || req.body.role === 'manager') {
+  router.get('/organization', (req, res) => {
+    
       // Look for list of organization in database
       Organization.find().select('name').exec((err, organization) => { // Check if connection error was found
         if (err) {
           res.json({ success: false, message: err }); // Return connection error
         } else {
           // return organization list
-          res.json({ success: true, organizations: organization}); // Return success, send organization object to frontend for profile
+          res.json({ success: true, organizations: organization }); // Return success, send organization object to frontend for organization
         }
     });
-  } 
-  else {
-      res.json({ success: false, message: 'you are not admin or manager'});
-    }
-  });
+    });
 
 
   /* ===============================================================

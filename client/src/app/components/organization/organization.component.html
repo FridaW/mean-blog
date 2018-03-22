@@ -10,9 +10,9 @@
 				<th>Name</th>
 				<th><button type="button" class="btn navbar-right addOrgButton">Add New Organizations</button></th>
 			</tr>
-			<tr *ngFor="let organization of organizations; trackBy: trackByFn">
-				<td>{{ organization.name }}</td>
-				<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button type="button" class="btn navbar-right addOrgButton" [routerLink]="['/setup/']">Setup</button></td>
+			<tr  *ngFor="let organization of organizations; trackBy: organization">
+				<td (click)="getOrgname()">{{ organization.name }}</td>
+				<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button type="button" class="btn navbar-right addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Setup</button></td>
 				
 			</tr>
 		</table>

@@ -26,6 +26,7 @@ import { OrganizationComponent } from './components/organization/organization.co
 import { SetupComponent } from './components/organization/setup/setup.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,

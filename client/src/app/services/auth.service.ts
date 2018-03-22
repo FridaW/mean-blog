@@ -12,6 +12,7 @@ export class AuthService {
   authToken;
   user;
   options;
+  organization;
 
   constructor(
     private http: Http
@@ -42,7 +43,7 @@ export class AuthService {
   // Function to get org data
   getOrganization() {
     this.createAuthenticationHeaders(); // Create headers before sending to API    
-    return this.http.get(this.domain + 'authentication/organization').map(res => res.json());
+    return this.http.post(this.domain + 'authentication/organization', this.organization).map(res => res.json());
   }
   
   // Function to check if username is taken
