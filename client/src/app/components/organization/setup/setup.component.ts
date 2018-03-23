@@ -19,6 +19,7 @@ export class SetupComponent implements OnInit {
   usernameValid;
   usernameMessage;
   organizationList;
+  randomPassword;
 
   constructor(
   	private formBuilder: FormBuilder,
@@ -102,6 +103,23 @@ export class SetupComponent implements OnInit {
       return { 'validateUsername': true } // Return as invalid username
     }
   }
+
+  generatePassword() {
+  	this.authService.getRandomPassword().subscribe(data => {
+	    	this.randomPassword = 
+	    	this.message = data.message;
+	    });
+
+	  	var length = 8,
+	      charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+	      reVal = "";
+	    for (var i = 0, n = charset.length; i < length; ++i) {
+	          reVal += charset.charAt(Math.floor(Math.random() * n));
+	      }
+      console.log(reVal)
+      let randomPassword = reVal;
+	    
+	};
 
   // Function to validate password
   validatePassword(controls) {

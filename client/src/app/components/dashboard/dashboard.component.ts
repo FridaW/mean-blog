@@ -51,8 +51,5 @@ export class DashboardComponent implements OnInit {
           this.message = updatedUser.message;
         }
      });
-
-     var desc = $(user).closest('tr').children('td.one').text();
-    console.log (JSON.stringify(desc))
   }
 }

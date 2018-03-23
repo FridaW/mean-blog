@@ -13,6 +13,8 @@ export class AuthService {
   user;
   options;
   organization;
+  randomPassword;
+  randompsw
 
   constructor(
     private http: Http
@@ -104,6 +106,13 @@ export class AuthService {
   // Function to check if user is logged in
   loggedIn() {
     return tokenNotExpired();
+  }
+
+  //Gunction to generate random password
+  getRandomPassword() {
+      console.log(this.randomPassword)
+          this.createAuthenticationHeaders(); // Create headers before sending to API
+      return this.http.get(this.domain + 'authentication/getRandomPassword', this.randomPassword).map(res => res.json());
   }
 
 }

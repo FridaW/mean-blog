@@ -246,6 +246,22 @@ module.exports = (router) => {
       res.json({ success: false, message: 'you are not admin'});
     }
   });
+
+  router.post('/getRandomPassword', (req, res) => {
+    if(req.body.author.role === 'admin') {
+      
+
+        (err, reVal) => {
+          if (err) {
+            res.json({ success: false, message: err }); // Return error
+          } else {
+            res.json({ success: true, randomPassword: 'reVal' }); // Return success
+          }
+        }
+    } else {
+      res.json({ success: false, message: 'you are not admin'});
+    }
+  });
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
   ================================================ */
@@ -288,6 +304,7 @@ module.exports = (router) => {
       }
     });
   });
+
 
   /* ===============================================================
      Route to get user's public profile data
