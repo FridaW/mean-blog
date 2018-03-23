@@ -16,7 +16,7 @@
     		
     	<tr *ngFor="let user of users; trackBy: user">
 
-    		<td>{{user.username}}</td>
+    		<td class="one">{{user.username}}</td>
     		<td>{{user.role}}</td>
             <td><button type="button" *ngIf="user.role !== 'admin'" class='btn btn-{{user.operation}}' 
                 (click)="changeRole(user)">{{user.operation}}</button></td>
