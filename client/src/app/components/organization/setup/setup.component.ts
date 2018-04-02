@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { tokenNotExpired } from 'angular2-jwt';
+import { SetupService } from '../../../services/setup.service';
 
 @Component({
   selector: 'app-setup',
@@ -19,12 +21,15 @@ export class SetupComponent implements OnInit {
   usernameValid;
   usernameMessage;
   organizationList;
-  randomPassword;
+  passwordInput;
+  randomPassword = '';
+  passwords = '';
 
   constructor(
   	private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private setupService: SetupService
   	) { 
   	this.createForm(); // Create Angular 2 Form when component loads
   }
@@ -104,22 +109,7 @@ export class SetupComponent implements OnInit {
     }
   }
 
-  generatePassword() {
-  	this.authService.getRandomPassword().subscribe(data => {
-	    	this.randomPassword = 
-	    	this.message = data.message;
-	    });
-
-	  	var length = 8,
-	      charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-	      reVal = "";
-	    for (var i = 0, n = charset.length; i < length; ++i) {
-	          reVal += charset.charAt(Math.floor(Math.random() * n));
-	      }
-      console.log(reVal)
-      let randomPassword = reVal;
-	    
-	};
+ 
 
   // Function to validate password
   validatePassword(controls) {
@@ -131,6 +121,15 @@ export class SetupComponent implements OnInit {
     } else {
       return { 'validatePassword': true } // Return as invalid password
     }
+  }
+
+  generatePassword () {
+    //const randomPassword = this.passwordInput.get('password').value;
+    this.setupService.generatePassword().subscribe (data => {
+      this.passwords = data.randomPassword;
+      this.passwordInput.reset();
+      console.log (this.passwords)
+    })
   }
 
   // Funciton to ensure passwords match
@@ -220,8 +219,10 @@ export class SetupComponent implements OnInit {
   ngOnInit() {
     this.authService.getOrganization().subscribe(data => {
       this.organizationList = data.organizations;
+      console.log (this.organizationList)
     });
-    console.log(this.form);
+/*    console.log(this.form);*/
+    
   }
 
 }

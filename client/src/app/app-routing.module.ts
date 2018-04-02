@@ -27,9 +27,14 @@ const appRoutes: Routes = [
   },
   {
     path: 'setup',
-    component: SetupComponent, // Organization Route,
+    component: SetupComponent, // Setup Route,
     canActivate: [AuthGuard] // User must be logged in to view this route
   },
+  {
+    path: 'setup/generatePassword',
+    component: SetupComponent, // Setup Route,
+    canActivate: [AuthGuard] // User must be logged in to view this route
+  }，
   {
     path: 'dashboard',
     component: DashboardComponent, // Dashboard Route,

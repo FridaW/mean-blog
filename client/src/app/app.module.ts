@@ -12,6 +12,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { AuthService } from './services/auth.service';
 import { BlogService } from './services/blog.service';
 import { AuthorizeService } from './services/authorize.service';
+import { SetupService } from './services/setup.service';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FlashMessagesModule } from 'angular2-flash-messages';
@@ -52,7 +53,7 @@ import { SetupComponent } from './components/organization/setup/setup.component'
     AppRoutingModule,
     FlashMessagesModule
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, AuthorizeService],
+  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, AuthorizeService, SetupService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

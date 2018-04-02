@@ -42,9 +42,7 @@ export class OrganizationComponent implements OnInit {
         return ret;
 
   });
-    //var name = $("#attendees td.setup").closest('tr').find('.one').text() || $("#attendees td.setup").closest('tr').find('.one').val();
-    /*var id = $(this).closest('td').attr('id');
-    var txt = $(this).closest('tr').find('#id').text() || $(this).closest('tr').find('#id').val();*/
+    
     console.log(data);
     console.log(data[0]);
 

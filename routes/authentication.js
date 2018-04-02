@@ -221,7 +221,7 @@ module.exports = (router) => {
           res.json({ success: false, message: err }); // Return connection error
         } else {
           // return organization list
-          res.json({ success: true, organizations: organization }); // Return success, send organization object to frontend for organization
+          res.json({ success: true, organizations: organization }); // Return success, send organization object to frontend for organizations
         }
     });
     });
@@ -247,21 +247,17 @@ module.exports = (router) => {
     }
   });
 
-  router.post('/getRandomPassword', (req, res) => {
-    if(req.body.author.role === 'admin') {
-      
-
-        (err, reVal) => {
-          if (err) {
-            res.json({ success: false, message: err }); // Return error
-          } else {
-            res.json({ success: true, randomPassword: 'reVal' }); // Return success
-          }
-        }
-    } else {
-      res.json({ success: false, message: 'you are not admin'});
+  router.post('/generatePassword/', (req, res) => {
+    if (!req.body.randomPasswords){
+      res.json({ success: false, message: 'No password was provided.' });
     }
+    else if (err) {
+      res.json({ success: false, message: err }); // Return error
+    } else {
+      res.json({ success: true, randomPassword : randomPasswords }); // Return success
+    };
   });
+
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
   ================================================ */
