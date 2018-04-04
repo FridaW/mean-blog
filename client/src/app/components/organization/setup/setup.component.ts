@@ -111,7 +111,7 @@ export class SetupComponent implements OnInit {
 
  
 
-  // Function to validate password
+   // Function to validate password
   validatePassword(controls) {
     // Create a regular expression
     const regExp = new RegExp(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$/);
@@ -121,15 +121,6 @@ export class SetupComponent implements OnInit {
     } else {
       return { 'validatePassword': true } // Return as invalid password
     }
-  }
-
-  generatePassword () {
-    //const randomPassword = this.passwordInput.get('password').value;
-    this.setupService.generatePassword().subscribe (data => {
-      this.passwords = data.randomPassword;
-      this.passwordInput.reset();
-      console.log (this.passwords)
-    })
   }
 
   // Funciton to ensure passwords match
@@ -143,6 +134,31 @@ export class SetupComponent implements OnInit {
       }
     }
   }
+
+  generatePassword () {
+    //const randomPassword = this.passwordInput.get('password').value;
+    /*this.setupService.generatePassword().subscribe (data => {
+      this.passwords = data.randomPassword;
+      this.message = data.message;
+      this.passwordInput.reset();
+      console.log (this.passwords)
+    })*/
+    console.log('hi')
+    const randomPasswords = getPassword ()
+    function getPassword () {
+        var length = 8,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            reVal = "";
+          for (var i = 0, n = charset.length; i < length; ++i) {
+                reVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return reVal
+    }
+
+    console.log(randomPasswords)
+    return randomPasswords;
+};
+
 
   // Function to ensure organization is selected 
   validateOrganization(controls) {
@@ -181,6 +197,36 @@ export class SetupComponent implements OnInit {
         setTimeout(() => {
           this.router.navigate(['/login']); // Redirect to login view
         }, 2000);
+      }
+    });
+
+  }
+
+  // Function to submit form
+  onInviteSubmit() {
+    this.processing = true; // Used to notify HTML that form is in processing, so that it can be disabled
+    this.disableForm(); // Disable the form
+    // Create user object form user's inputs
+    const user = {
+      email: this.form.get('email').value, // E-mail input field
+      username: this.form.get('username').value, // Username input field
+      password: this.form.get('password').value, // Password input field
+      organization: this.form.get('organization').value // organization select field
+    }
+
+    // Function from authentication service to register user
+    this.authService.registerUser(user).subscribe(data => {
+      // Resposne from registration attempt
+      if (!data.success) {
+        this.messageClass = 'alert alert-danger'; // Set an error class
+        this.message = data.message; // Set an error message
+        this.processing = false; // Re-enable submit button
+        this.enableForm(); // Re-enable form
+      } else {
+        this.messageClass = 'alert alert-success'; // Set a success class
+        this.message = data.message; // Set a success message
+        // After 2 second timeout, navigate to the login page
+        
       }
     });
 

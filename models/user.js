@@ -131,6 +131,8 @@ const passwordValidators = [
 
 // User Model Definition
 const userSchema = new Schema({
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true, validate: emailValidators },
   username: { type: String, required: true, unique: true, lowercase: true, validate: usernameValidators },
   role: { type: String, required: true, lowercase: true},

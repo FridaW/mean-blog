@@ -7,6 +7,7 @@ import { SetupComponent } from './components/organization/setup/setup.component'
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
 import { PublicProfileComponent } from './components/public-profile/public-profile.component';
 import { BlogComponent } from './components/blog/blog.component';
 import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.component';
@@ -31,11 +32,6 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard] // User must be logged in to view this route
   },
   {
-    path: 'setup/generatePassword',
-    component: SetupComponent, // Setup Route,
-    canActivate: [AuthGuard] // User must be logged in to view this route
-  }，
-  {
     path: 'dashboard',
     component: DashboardComponent, // Dashboard Route,
     canActivate: [AuthGuard] // User must be logged in to view this route
@@ -53,6 +49,11 @@ const appRoutes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent, // Profile Route
+    canActivate: [AuthGuard] // User must be logged in to view this route
+  },
+  {
+    path: 'edit-profile',
+    component: EditProfileComponent, // Profile Route
     canActivate: [AuthGuard] // User must be logged in to view this route
   },
   {

@@ -39,7 +39,7 @@ export class SetupService {
     }
 
     console.log(randomPasswords)
-    return this.http.post(this.domain + 'authentication/generatePassword/', randomPasswords, this.options).map(res => res.json());
+//    return this.http.post(this.domain + 'authentication/generatePassword/', randomPasswords, this.options).map(res => res.json());
      
   };
 

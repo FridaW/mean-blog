@@ -25,6 +25,7 @@ import { PublicProfileComponent } from './components/public-profile/public-profi
 import { AppModalComponent } from './components/app-modal/app-modal.component';
 import { OrganizationComponent } from './components/organization/organization.component';
 import { SetupComponent } from './components/organization/setup/setup.component';
+import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
 
 
 
@@ -43,7 +44,8 @@ import { SetupComponent } from './components/organization/setup/setup.component'
     PublicProfileComponent,
     AppModalComponent,
     OrganizationComponent,
-    SetupComponent
+    SetupComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

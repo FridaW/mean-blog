@@ -12,12 +12,12 @@
 
   <!-- Username Field -->
   <div class="form-group">
-    <label for="username">Username</label>
-    <div [ngClass]="{'has-error': form.controls.username.errors && form.controls.username.dirty, 'has-success': form.controls.username.valid && form.controls.username.dirty }">
-      <input class="form-control" type="text" name="username" formControlName="username" />
+    <label for="email">Email</label>
+    <div [ngClass]="{'has-error': form.controls.email.errors && form.controls.email.dirty, 'has-success': form.controls.email.valid && form.controls.email.dirty }">
+      <input class="form-control" type="text" name="email" formControlName="email" />
       <!-- Validation -->
       <ul class="help-block">
-        <li *ngIf="form.controls.username.errors?.required && form.controls.username.dirty">This field is required.</li>
+        <li *ngIf="form.controls.email.errors?.required && form.controls.email.dirty">This field is required.</li>
       </ul>
     </div>
   </div>
