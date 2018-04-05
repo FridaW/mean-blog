@@ -12,13 +12,33 @@
 			</tr>
 			<tr class="data" *ngFor="let organization of organizations; trackBy: organization" >
 				<td class="one" attr.id="{{organization._id}}" >{{ organization.name }}</td>
-				<td class="setup" attr.id="{{organization._id}}"><button type="button" class="btn navbar-right addOrgButton">Edit</button><button attr.id="{{organization._id}}" type="button" class="btn navbar-right addMember addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Members</button></td>
-				
+				<td class="setup" attr.id="{{organization._id}}">
+					<button type="button" class="btn navbar-right baby" (click)="show = !show">Share Invitation</button>
+					<button type="button" class="btn navbar-right addOrgButton">Add New Member</button>
+					<button attr.id="{{organization._id}}" type="button" class="btn navbar-right addMember addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Members</button>
+				</td>
 			</tr>
+			<!-- <tr>
+				<td colspan="2" *ngIf="show; else elseBlock"> show/hide if click</td>
+			</tr> -->
 		</table>
 	</div>
 	
 </div>
+
+<div class="container-fluid">
+	<div class="row row-centered">
+		<div class="invitationGlobalWrap">
+			<!-- This div would only be shown if "show" will be true -->
+			<div class="invitationWrap" *ngIf="show; else elseBlock"> 
+				<p>Invite members to #this organization</p>
+				<input class="invitationInput" type="text" name="inviteEmail" placeholder="Enter email addresses " size="100">
+				<button class="invitesButton">Send Invites</button>
+			</div>
+		</div>		
+	</div>
+</div>
+
 
 <div class="container">
 
@@ -82,3 +102,5 @@
   </div>
   
 </div>
+
+

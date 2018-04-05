@@ -48,6 +48,12 @@ export class OrganizationComponent implements OnInit {
 
 };
 
+  showItem() {
+    $(".baby").click(function(){
+        $(".mybaby").toggle();
+    });
+  }
+
   
 
 }

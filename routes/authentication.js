@@ -28,72 +28,67 @@ module.exports = (router) => {
         if (!req.body.password) {
           res.json({ success: false, message: 'You must provide a password' }); // Return error
         } else {
-          var userOrganization;
-          Organization.findOne({ name: req.body.organization}, (err, organization) => {
+          // Create new user object and apply user input
+          let user = new User({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email.toLowerCase(),
+            username: req.body.username.toLowerCase(),
+            password: req.body.password,
+            role: getAdmin(req.body.username.toLowerCase())
+            /*organization: {
+              orgId: organization._id,
+              name: organization.name,
+              codeName: organization.codeName
+            }*/          
+          });
+          function getAdmin(username) {
+            const defaultAdmin = ['frida', 'guo'];
+            const defaultManager = ['water', 'sky'];
+            if (defaultAdmin.indexOf(username) > -1) {
+              return 'admin';
+            } 
+            else if (defaultManager.indexOf(username) > -1){
+              return 'manager';
+            } 
+            else {
+              return 'user';
+            }
+          }
+          console.log('');
+          // Save user to database
+          user.save((err) => {
+            // Check if error occured
             if (err) {
-              res.json({ success: false, message: err }); // Return connection error
-            } else {
-              // Create new user object and apply user input
-              let user = new User({
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email.toLowerCase(),
-                username: req.body.username.toLowerCase(),
-                password: req.body.password,
-                role: getAdmin(req.body.username.toLowerCase()),
-                organization: {
-                  orgId: organization._id,
-                  name: organization.name,
-                  codeName: organization.codeName
-                }          
-              });
-              function getAdmin(username) {
-                const defaultAdmin = ['frida', 'guo'];
-                const defaultManager = ['water', 'sky'];
-                if (defaultAdmin.indexOf(username) > -1) {
-                  return 'admin';
-                } 
-                else if (defaultManager.indexOf(username) > -1){
-                  return 'manager';
-                } 
-                else {
-                  return 'user';
-                }
-              }
-              // Save user to database
-              user.save((err) => {
-                // Check if error occured
-                if (err) {
-                  // Check if error is an error indicating duplicate account
-                  if (err.code === 11000) {
-                    res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
+              // Check if error is an error indicating duplicate account
+              if (err.code === 11000) {
+                res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
+              } else {
+                // Check if error is a validation rror
+                if (err.errors) {
+                  // Check if validation error is in the email field
+                  if (err.errors.email) {
+                    res.json({ success: false, message: err.errors.email.message }); // Return error
                   } else {
-                    // Check if error is a validation rror
-                    if (err.errors) {
-                      // Check if validation error is in the email field
-                      if (err.errors.email) {
-                        res.json({ success: false, message: err.errors.email.message }); // Return error
-                      } else {
-                        // Check if validation error is in the username field
-                        if (err.errors.username) {
-                          res.json({ success: false, message: err.errors.username.message }); // Return error
-                        } else {
-                          // Check if validation error is in the password field
-                          if (err.errors.password) {
-                            res.json({ success: false, message: err.errors.password.message }); // Return error
-                          } else {
-                            res.json({ success: false, message: err }); // Return any other error not already covered
-                          }
-                        }
-                      }
+                    // Check if validation error is in the username field
+                    if (err.errors.username) {
+                      res.json({ success: false, message: err.errors.username.message }); // Return error
                     } else {
-                      res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
+                      // Check if validation error is in the password field
+                      if (err.errors.password) {
+                        res.json({ success: false, message: err.errors.password.message }); // Return error
+                      } else {
+                        console.log('error');
+                        res.json({ success: false, message: err }); // Return any other error not already covered
+                      }
                     }
                   }
                 } else {
-                  res.json({ success: true, message: 'Acount registered!' }); // Return success
+                  res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
                 }
-              });
+              }
+            } else {
+              res.json({ success: true, message: 'Acount registered!' }); // Return success
             }
           });
         }
@@ -127,11 +122,11 @@ module.exports = (router) => {
                 username: req.body.username.toLowerCase(),
                 password: req.body.password,
                 role: getAdmin(req.body.username.toLowerCase()),
-                organization: {
-                  orgId: organization._id,
-                  name: organization.name,
-                  codeName: organization.codeName
-                }          
+                // organization: {
+                //   orgId: organization._id,
+                //   name: organization.name,
+                //   codeName: organization.codeName
+                // }          
               });
               function getAdmin(username) {
                 const defaultAdmin = ['frida', 'guo'];
