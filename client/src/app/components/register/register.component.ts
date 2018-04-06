@@ -203,7 +203,9 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.authService.getOrganization().subscribe(data => {
+      console.log(data.organizations);
       this.organizationList = data.organizations;
+      this.organizationList.push({name: 'Default Organization'});
     });
     console.log(this.form);
   }
