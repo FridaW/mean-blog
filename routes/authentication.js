@@ -8,6 +8,97 @@ module.exports = (router) => {
      Register Route
   ============== */
   router.post('/register', (req, res) => {
+    // Check if last name was provided
+  if (!req.body.lastname) {
+      res.json({ success: false, message: 'You must provide a lastname' }); // Return error
+    } else {  
+    // Check if first name was provided
+    if (!req.body.firstname) {
+      res.json({ success: false, message: 'You must provide a firstname' }); // Return error
+    } else {
+    // Check if email was provided
+     if (!req.body.email) {
+      res.json({ success: false, message: 'You must provide an e-mail' }); // Return error
+    } else {
+      // Check if username was provided
+      if (!req.body.username) {
+        res.json({ success: false, message: 'You must provide a username' }); // Return error
+      } else {
+        // Check if password was provided
+        if (!req.body.password) {
+          res.json({ success: false, message: 'You must provide a password' }); // Return error
+        } else {
+          // Create new user object and apply user input
+          let user = new User({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email.toLowerCase(),
+            username: req.body.username.toLowerCase(),
+            password: req.body.password,
+            role: getAdmin(req.body.username.toLowerCase())
+            /*organization: {
+              orgId: organization._id,
+              name: organization.name,
+              codeName: organization.codeName
+            }*/          
+          });
+          function getAdmin(username) {
+            const defaultAdmin = ['frida', 'guo'];
+            const defaultManager = ['water', 'sky'];
+            if (defaultAdmin.indexOf(username) > -1) {
+              return 'admin';
+            } 
+            else if (defaultManager.indexOf(username) > -1){
+              return 'manager';
+            } 
+            else {
+              return 'user';
+            }
+          }
+          console.log('');
+          // Save user to database
+          user.save((err) => {
+            // Check if error occured
+            if (err) {
+              // Check if error is an error indicating duplicate account
+              if (err.code === 11000) {
+                res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
+              } else {
+                // Check if error is a validation rror
+                if (err.errors) {
+                  // Check if validation error is in the email field
+                  if (err.errors.email) {
+                    res.json({ success: false, message: err.errors.email.message }); // Return error
+                  } else {
+                    // Check if validation error is in the username field
+                    if (err.errors.username) {
+                      res.json({ success: false, message: err.errors.username.message }); // Return error
+                    } else {
+                      // Check if validation error is in the password field
+                      if (err.errors.password) {
+                        res.json({ success: false, message: err.errors.password.message }); // Return error
+                      } else {
+                        console.log('error');
+                        res.json({ success: false, message: err }); // Return any other error not already covered
+                      }
+                    }
+                  }
+                } else {
+                  res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
+                }
+              }
+            } else {
+              res.json({ success: true, message: 'Acount registered!' }); // Return success
+            }
+          });
+        }
+      }
+    }
+  }
+  }
+  });
+
+  router.post('/setup', (req, res) => {
     // Check if email was provided
     if (!req.body.email) {
       res.json({ success: false, message: 'You must provide an e-mail' }); // Return error
@@ -31,11 +122,11 @@ module.exports = (router) => {
                 username: req.body.username.toLowerCase(),
                 password: req.body.password,
                 role: getAdmin(req.body.username.toLowerCase()),
-                organization: {
-                  orgId: organization._id,
-                  name: organization.name,
-                  codeName: organization.codeName
-                }          
+                // organization: {
+                //   orgId: organization._id,
+                //   name: organization.name,
+                //   codeName: organization.codeName
+                // }          
               });
               function getAdmin(username) {
                 const defaultAdmin = ['frida', 'guo'];
@@ -90,7 +181,7 @@ module.exports = (router) => {
       }
     }
   });
-
+  
   /* ============================================================
      Route to check if user's email is available for registration
   ============================================================ */
@@ -144,22 +235,22 @@ module.exports = (router) => {
   ======== */
   router.post('/login', (req, res) => {
     // Check if username was provided
-    if (!req.body.username) {
-      res.json({ success: false, message: 'No username was provided' }); // Return error
+    if (!req.body.email) {
+      res.json({ success: false, message: 'No email was provided' }); // Return error
     } else {
       // Check if password was provided
       if (!req.body.password) {
         res.json({ success: false, message: 'No password was provided.' }); // Return error
       } else {
         // Check if username exists in database
-        User.findOne({ username: req.body.username.toLowerCase() }, (err, user) => {
+        User.findOne({ email: req.body.email.toLowerCase() }, (err, user) => {
           // Check if error was found
           if (err) {
             res.json({ success: false, message: err }); // Return error
           } else {
             // Check if username was found
             if (!user) {
-              res.json({ success: false, message: 'Username not found.' }); // Return error
+              res.json({ success: false, message: 'User not found.' }); // Return error
             } else {
               const validPassword = user.comparePassword(req.body.password); // Compare password provided to password in database
               // Check if password is a match
@@ -221,7 +312,7 @@ module.exports = (router) => {
           res.json({ success: false, message: err }); // Return connection error
         } else {
           // return organization list
-          res.json({ success: true, organizations: organization }); // Return success, send organization object to frontend for organization
+          res.json({ success: true, organizations: organization }); // Return success, send organization object to frontend for organizations
         }
     });
     });
@@ -246,6 +337,18 @@ module.exports = (router) => {
       res.json({ success: false, message: 'you are not admin'});
     }
   });
+
+  router.post('/generatePassword/', (req, res) => {
+    if (!req.body.randomPassword){
+      res.json({ success: false, message: 'No password was provided.' });
+    }
+    else if (err) {
+      res.json({ success: false, message: err }); // Return error
+    } else {
+      res.json({ success: true, message: 'win' }); // Return success
+    };
+  });
+
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
   ================================================ */
@@ -288,6 +391,7 @@ module.exports = (router) => {
       }
     });
   });
+
 
   /* ===============================================================
      Route to get user's public profile data

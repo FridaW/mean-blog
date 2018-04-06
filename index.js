@@ -22,7 +22,7 @@ mongoose.connect(config.uri, {
   if (err) {
     console.log('Could NOT connect to database: ', err); // Return error message
   } else {
-    console.log('Connected to ' + config.db); // Return success message
+    console.log('Connected to ' + config.url + ' database ' + config.db); // Return success message
   }
 });
 
