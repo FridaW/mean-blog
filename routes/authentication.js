@@ -1,5 +1,6 @@
 const User = require('../models/user'); // Import User Model Schema
-const Organization = require('../models/organization'); // Import User Model Schema
+const Organization = require('../models/organization'); // Import Organization Model Schema
+const Invitation = require('../models/invitation'); // Import Invitation Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/database'); // Import database configuration
 
@@ -307,7 +308,7 @@ module.exports = (router) => {
   router.get('/organization', (req, res) => {
     
       // Look for list of organization in database
-      Organization.find().select('name').exec((err, organization) => { // Check if connection error was found
+      Organization.find().select('name codeName').exec((err, organization) => { // Check if connection error was found
         if (err) {
           res.json({ success: false, message: err }); // Return connection error
         } else {
@@ -388,6 +389,31 @@ module.exports = (router) => {
           res.json({ success: true, user: user }); // Return success, send user object to frontend for profile
 
         }
+      }
+    });
+  });
+
+  router.post('/sendInvitation', (req, res) => {
+    // Check if last name was provided
+    // Create new user object and apply user input
+    let invitation = new Invitation({
+      link : getToken(),
+      organization : req.body.organization,
+      codeName : req.body.codeName,
+      email : req.body.email,     
+    });
+
+    function getToken() {
+      var uuid = require("uuid")
+      return uuid();
+    }
+    
+    invitation.save((err) => {
+      // Check if error occured
+      if (err) {
+        res.json({ success: false, message: err }); // Return any other error not already covered
+      } else {
+        res.json({ success: true, message: 'Invitation information saved' }); // Return success
       }
     });
   });
