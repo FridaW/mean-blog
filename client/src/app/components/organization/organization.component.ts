@@ -42,10 +42,17 @@ export class OrganizationComponent implements OnInit {
         return ret;
 
   });
+    
     console.log(data);
     console.log(data[0]);
 
 };
+
+  showItem() {
+    $(".baby").click(function(){
+        $(".mybaby").toggle();
+    });
+  }
 
   
 

@@ -43,7 +43,7 @@ export class AuthService {
   // Function to get org data
   getOrganization() {
     this.createAuthenticationHeaders(); // Create headers before sending to API    
-    return this.http.post(this.domain + 'authentication/organization', this.organization).map(res => res.json());
+    return this.http.get(this.domain + 'authentication/organization').map(res => res.json());
   }
   
   // Function to check if username is taken
@@ -105,5 +105,21 @@ export class AuthService {
   loggedIn() {
     return tokenNotExpired();
   }
+
+  //Function to get generated random password
+ /* getRandomPassword() {
+      this.createAuthenticationHeaders(); // Create headers before sending to API 
+      let randomPassword = getPassword ()
+      function getPassword () {
+          var length = 8,
+              charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+              reVal = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                  reVal += charset.charAt(Math.floor(Math.random() * n));
+              }
+              return reVal
+      }
+      return this.http.get(this.domain + 'setup/getRandomPassword', this.options).map(res => res.json());
+  }*/
 
 }

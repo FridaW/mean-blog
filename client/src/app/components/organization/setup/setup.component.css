@@ -12,3 +12,12 @@
 	margin-top: 10px;
 	font-weight: bold;
 }
+
+ul.shareInput{
+	padding: 0 !important;
+	margin-top: 10px !important;
+}
+
+.orgTable{
+	width: 100%;
+}

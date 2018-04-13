@@ -1,0 +1,38 @@
+<h1 class="page-header">Edit your profile</h1>
+
+<form>
+	<div class="form-group">
+	    <label for="username">Username</label>
+	    <div >
+	      <input type="text" name="username" class="form-control" autocomplete="off" value="{{ username }}" />
+	      <!-- Validation -->
+	    </div>
+    </div>
+
+    <div class="form-group">
+	    <label for="email">Email</label>
+	    <div >
+	      <input type="text" name="email" class="form-control" autocomplete="off" value="{{ email }}" />
+	      <!-- Validation -->
+	    </div>
+    </div>
+
+    <div class="form-group">
+	    <label for="current-password">Current Password</label>
+	    <div >
+	      <input type="text" name="current-password" class="form-control" autocomplete="off" />
+	      <!-- Validation -->
+	    </div>
+    </div>
+
+    <div class="form-group">
+	    <label for="new-password">New Password</label>
+	    <div >
+	      <input type="text" name="new-password" class="form-control" autocomplete="off" />
+	      <!-- Validation -->
+	    </div>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Submit" />
+
+</form>

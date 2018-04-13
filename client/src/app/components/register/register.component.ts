@@ -32,6 +32,18 @@ export class RegisterComponent implements OnInit {
   // Function to create registration form
   createForm() {
     this.form = this.formBuilder.group({
+      //First Name Input
+      firstname: ['', Validators.compose([
+        Validators.required,
+        this.validateFirstname
+        ])],
+
+      // Last Name Input
+      lastname: ['', Validators.compose([
+        Validators.required,
+        this.validateLastname
+        ])],
+
       // Email Input
       email: ['', Validators.compose([
         Validators.required, // Field is required
@@ -54,10 +66,10 @@ export class RegisterComponent implements OnInit {
         this.validatePassword // Custom validation
       ])],
       // Organization Input
-      organization: ['', Validators.compose([
+      /*organization: ['', Validators.compose([
         Validators.required, // Field is required
         this.validateOrganization
-      ])],
+      ])],*/
       // Confirm Password Input
       confirm: ['', Validators.required] // Field is required
     }, { validator: this.matchingPasswords('password', 'confirm') }); // Add custom validator to form for matching passwords
@@ -65,20 +77,43 @@ export class RegisterComponent implements OnInit {
 
   // Function to disable the registration form
   disableForm() {
+    this.form.controls['firstname'].disable();
+    this.form.controls['lastname'].disable();
     this.form.controls['email'].disable();
     this.form.controls['username'].disable();
     this.form.controls['password'].disable();
     this.form.controls['confirm'].disable();
-    this.form.controls['organization'].disable();
+//    this.form.controls['organization'].disable();
   }
 
   // Function to enable the registration form
   enableForm() {
+    this.form.controls['firstname'].enable();
+    this.form.controls['lastname'].disable();
     this.form.controls['email'].enable();
     this.form.controls['username'].enable();
     this.form.controls['password'].enable();
     this.form.controls['confirm'].enable();
-    this.form.controls['organization'].enable();
+//    this.form.controls['organization'].enable();
+  }
+
+  // Function to validate first name is proper format
+  validateFirstname(controls){
+    if(controls.value) {
+      console.log(controls.value);
+      return null;
+    } else {
+      return { 'validateFirstname': true };
+    } 
+  }
+
+  validateLastname(controls){
+    if(controls.value) {
+      console.log(controls.value);
+      return null;
+    } else {
+      return { 'validateLastname': true };
+    } 
   }
 
   // Function to validate e-mail is proper format
@@ -130,14 +165,14 @@ export class RegisterComponent implements OnInit {
   }
 
   // Function to ensure organization is selected 
-  validateOrganization(controls) {
+  /*validateOrganization(controls) {
     if(controls.value) {
       console.log(controls.value);
       return null;
     } else {
       return { 'validateOrganization': true };
     } 
-  }
+  }*/
 
   // Function to submit form
   onRegisterSubmit() {
@@ -145,15 +180,18 @@ export class RegisterComponent implements OnInit {
     this.disableForm(); // Disable the form
     // Create user object form user's inputs
     const user = {
+      firstname: this.form.get('firstname').value,  // first name input field
+      lastname: this.form.get('lastname').value,  // first name input field
       email: this.form.get('email').value, // E-mail input field
       username: this.form.get('username').value, // Username input field
-      password: this.form.get('password').value, // Password input field
-      organization: this.form.get('organization').value // organization select field
+      password: this.form.get('password').value // Password input field
+      //organization: this.form.get('organization').value // organization select field
     }
 
     // Function from authentication service to register user
     this.authService.registerUser(user).subscribe(data => {
       // Resposne from registration attempt
+      console.log(data);
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Set an error class
         this.message = data.message; // Set an error message
@@ -202,10 +240,11 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getOrganization().subscribe(data => {
+    /*this.authService.getOrganization().subscribe(data => { 
       this.organizationList = data.organizations;
+      this.organizationList.push({name: 'Default Organization'});
     });
-    console.log(this.form);
+    console.log(this.form);*/
   }
 
 }

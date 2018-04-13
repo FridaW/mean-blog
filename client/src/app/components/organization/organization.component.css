@@ -6,3 +6,23 @@
 
 	width: 100%;
 }
+
+.row-centered {
+	margin-top: 100px;
+}
+
+.invitationGlobalWrap {
+	text-align: center;
+	margin: auto;
+}
+
+.invitationInput{
+	height: 40px;
+}
+
+.invitesButton {
+	width: 155px;
+	height: 42px;
+	background-color: #7FC68E;
+	color: #FFFFFF;
+}
