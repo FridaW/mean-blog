@@ -73,6 +73,11 @@ export class AuthService {
     return this.http.put(this.domain + 'authentication/authorizationChange', users).map(res => res.json());
   }
 
+  sendInvitation(invitation) {
+    this.createAuthenticationHeaders(); 
+    return this.http.post(this.domain + 'authentication/sendInvitation', invitation, this.options).map(res => res.json());
+  } 
+
   // Function to logout
   logout() {
     this.authToken = null; // Set token to null

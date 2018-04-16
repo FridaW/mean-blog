@@ -2,8 +2,8 @@ const fs = require('fs');
 
 if (fs.existsSync('./public')) {
   process.env.NODE_ENV = 'production';
-  //process.env.databaseUri = 'mongodb://patel:patel@ds153752.mlab.com:53752/angular-2-app'; // Databse URI and database name
-  process.env.databaseLocalUri = 'mongodb://patel:patel@ds153752.mlab.com:53752/angular-2-app';
+  process.env.databaseUri = 'mongodb://patel:patel@ds153752.mlab.com:53752/angular-2-app'; // Databse URI and database name
+  //process.env.databaseLocalUri = 'mongodb://patel:patel@ds153752.mlab.com:53752/angular-2-app';
   process.env.databaseName = 'production database: angular-2-app'; // Database name
 } else {
   process.env.NODE_ENV = 'development';
