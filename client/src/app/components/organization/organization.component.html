@@ -1,6 +1,12 @@
 <div class="container-fluid">
-	<h2 class="page-header orgTitle">Organizations</h2>
-	
+	<h2 class="page-header orgTitle">Organizations</h2>	
+</div>
+
+<!-- Custom Success/Error Message -->
+<div class="row show-hide-message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
 </div>
 
 <div class="container-fluid">
@@ -10,12 +16,122 @@
 				<th>Name</th>
 				<th><button type="button" class="btn navbar-right addOrgButton">Add New Organizations</button></th>
 			</tr>
-			<tr class="data"  *ngFor="let organization of organizations; trackBy: organization">
-				<td class="one" id="i++">{{ organization.name }}</td>
-				<td><button type="button" class="btn navbar-right addOrgButton">Edit</button><button id="myID" type="button" class="btn navbar-right addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Setup</button></td>
-				
+			<tr class="data" *ngFor="let organization of organizations; trackBy: organization" >
+				<td class="one" attr.id="{{organization._id}}" >{{ organization.name }}</td>
+				<td class="setup" attr.id="{{organization._id}}">
+					<button type="button" class="btn navbar-right baby" (click)="show = !show">Share Invitation</button>
+					<button type="button" class="btn navbar-right addOrgButton">Add New Member</button>
+					<button attr.id="{{organization._id}}" type="button" class="btn navbar-right addMember addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Members</button>
+				</td>
 			</tr>
+			<!-- <tr>
+				<td colspan="2" *ngIf="show; else elseBlock"> show/hide if click</td>
+			</tr> -->
 		</table>
 	</div>
 	
 </div>
+
+<div class="container-fluid">
+	<div class="row row-centered">
+		<div class="invitationGlobalWrap" *ngIf="show; else elseBlock">
+			
+				<div class="form-group" *ngFor="let organization of organizations; trackBy: organization">
+					<div [ngClass]="{'has-error': (form.controls.email.errors && form.controls.email.dirty) || (!emailValid && form.controls.email.dirty), 'has-success': !form.controls.email.errors && emailValid}">
+						<form [formGroup]="form">
+							<p>Invite members to #this organization</p>
+							<div class="col-sm-9">
+								<input class="invitationInput" type="text" name="inviteEmail" class="form-control" formControlName="email" placeholder="Enter email addresses " size="100" (blur)="checkEmail()" />							
+							</div>
+							<div class="col-sm-3">
+								<button [disabled]="!form.valid || processing || !emailValid" class="invitesButton btn" type="submit" (click)="sendInvitation(organization)">Send Invitation</button>
+							</div>
+							<div>
+								<ul class="help-block">
+							        <li *ngIf="form.controls.email.errors?.required && form.controls.email.dirty">This field is required</li>
+							        <li *ngIf="(form.controls.email.errors?.minlength && form.controls.email.dirty || form.controls.email.errors?.maxlength && form.controls.email.dirty ) && form.controls.email.dirty">Minimum characters: 5, Maximum characters: 30</li>
+							        <li *ngIf="form.controls.email.errors?.validateEmail && form.controls.email.dirty">This must be a valid e-mail</li>
+							        <li *ngIf="emailMessage">{{ emailMessage}}</li>
+							    </ul>
+							</div>						
+						</form>
+					</div>
+				</div>
+			
+			<!-- This div would only be shown if "show" will be true -->
+			<!-- <div class="invitationWrap" *ngIf="show; else elseBlock">
+			  <div *ngFor="let organization of organizations; trackBy: organization">
+			  	<p>Invite members to #this organization</p>
+				<input class="invitationInput" type="text" name="inviteEmail" placeholder="Enter email addresses " size="100">
+				<button class="invitesButton" (click)="sendInvitation(organization)">Send Invitation</button>
+			  </div> 
+			</div> -->
+		</div>		
+	</div>
+</div>
+
+
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="addMember" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <form>
+          	<div class="form-group">
+          		<label for="firstname">First Name:</label>          		
+	          	<input type="text" class="form-control" id="firstname"><br>
+	          	<label for="lastname">Last Name:</label>
+	          	<input type="text" class="form-control" id="lastname"><br>
+	          	<label for="email">Email:</label>
+	          	<input type="text" class="form-control" id="email"><br>
+			    <label for="organization">Organization List</label>
+			    <select class="form-control" id="organization">
+			      <option> Please select the organization</option>
+			      <option *ngFor="let organization of organizations">{{organization.name}}</option>
+			    </select><br>
+	          	<label for="role">Role:</label>
+	          	<select class="form-control" id="role">
+					<option value="user">User</option>
+					<option value="manager">Manager</option>				
+				</select><br>
+				
+			<button type="button" class="btn link" data-toggle="collapse" data-target="#share" id="shareButton">share</button>
+			  <div id="share" class="collapse">
+			    <ul>
+			    	<input type="text" name="registerLink" title="First Name" style="color:#888;" value="http://localhost:4200/register" />
+			    	
+			    	<button id="copied">Copy to Clipboard</button>			    	
+			    </ul>
+			  </div>
+          	</div>
+
+
+          	
+        </form>
+
+          	<!-- <button type="button" class="btn navbar-right addMember">Share</button> -->
+          	<div class="container">
+			  
+			</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#save">Save</button>
+          
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+

@@ -1,4 +1,12 @@
-<h2 class="page-header">Profile Page</h2>
+<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-left">
+			<li><h2 class="page-header">Profile Page</h2></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><button type="button" class="btn toRight" [routerLink]="['/edit-profile/']">Edit</button></li>
+		</ul>		
+</div>
+	
 <ul class="list-group">
   <li class="list-group-item">Username: {{ username }}</li>
   <li class="list-group-item">Email: {{ email }}</li>
@@ -6,3 +14,5 @@
 <!--   <li class="list-group-item">Organization: {{ organization }}</li> -->
   
 </ul>
+
+
