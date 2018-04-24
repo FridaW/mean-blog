@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -19,12 +19,14 @@ export class RegisterComponent implements OnInit {
   usernameValid;
   usernameMessage;
   organizationList;
+  organization;
 
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.createForm(); // Create Angular 2 Form when component loads
   }
@@ -184,8 +186,8 @@ export class RegisterComponent implements OnInit {
       lastname: this.form.get('lastname').value,  // first name input field
       email: this.form.get('email').value, // E-mail input field
       username: this.form.get('username').value, // Username input field
-      password: this.form.get('password').value // Password input field
-      //organization: this.form.get('organization').value // organization select field
+      password: this.form.get('password').value, // Password input field
+      organization: "Propeller Consulting, Inc."//this.form.get('organization').value // organization select field
     }
 
     // Function from authentication service to register user
@@ -240,11 +242,19 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*this.authService.getOrganization().subscribe(data => { 
+    this.authService.getOrganization().subscribe(data => {
+      console.log(data)
       this.organizationList = data.organizations;
-      this.organizationList.push({name: 'Default Organization'});
     });
-    console.log(this.form);*/
+    console.log(this.form);
+
+    /*// subscribe to router event
+    this.activatedRoute.params.subscribe((params: Params) => {
+        let userId = params['userId'];
+        console.log(userId);
+      });*/
+
+
   }
 
 }

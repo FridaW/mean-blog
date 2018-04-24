@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { EmailService } from '../../services/email.service';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 
@@ -19,41 +20,46 @@ export class OrganizationComponent implements OnInit {
   processing = false;
   emailValid;
   emailMessage;
+  templates: any[];
+  invitations;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private emailService: EmailService
   	//private profile: ProfileComponent
   	) {
       this.createForm(); // Create Angular 2 Form when component loads
+      this.templates = this.emailService.templates;
     }
 
   ngOnInit() {
   	this.authService.getOrganization().subscribe(organizationsProfile => {
       this.organizations = organizationsProfile.organizations || [];
     });
-
   }
 
-  getOrgname() {
-
-};
-
-  sendInvitation(organization) {
+  sendInvitation(organization, value: any) {
     this.processing = true;
     this.disableForm();
 
     console.log(organization.name);
 
-    let invitation = {
-      link : { type: String, required: true },
+    const invitation = {
+      token : { type: String, required: true },
       organization : organization.name,
       codeName : organization.codeName,
       email : this.form.get('email').value, //Get value from email input field
+      link: { type: String, required: true },
     }
 
     console.log(invitation)
+
+    this.emailService.sendEmail(invitation).subscribe(res => {
+        console.log(res);
+      }
+    );
 
     this.authService.sendInvitation(invitation).subscribe(invitationData => {
       
@@ -68,9 +74,9 @@ export class OrganizationComponent implements OnInit {
         this.messageClass = 'alert alert-success'; // Set a success class
         this.message = invitationData.message; // Set a success message
         // After 2 second timeout, navigate to the login page
-        setTimeout(() => {
+        /*setTimeout(() => {
           location.reload(); //Reload this page after invitation has been sent
-        }, 2000);
+        }, 2000);*/
       }
     });
   }
@@ -119,5 +125,11 @@ export class OrganizationComponent implements OnInit {
   enableForm() {
     this.form.controls['email'].enable();
   }
+
+  /*generateLink() {
+    this.authService.sendInvitation(invitation).subscribe(invitationData => {
+      this.token = invitationData.invitation;
+    })
+  }*/
 
 }

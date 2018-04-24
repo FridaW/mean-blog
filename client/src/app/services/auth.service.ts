@@ -13,7 +13,7 @@ export class AuthService {
   user;
   options;
   organization;
-
+  
   constructor(
     private http: Http
   ) { }
@@ -78,6 +78,15 @@ export class AuthService {
     return this.http.post(this.domain + 'authentication/sendInvitation', invitation, this.options).map(res => res.json());
   } 
 
+  /*checkInvitation(invitation) {
+    return this.http.post(this.domain + 'authentication/checkInvitation', invitation).map(res => res.json());
+  }*/
+
+  /*getInvitation() {
+    this.createAuthenticationHeaders(); // Create headers before sending to API    
+    return this.http.get(this.domain + 'authentication/getInvitation').map(res => res.json());
+  }*/
+
   // Function to logout
   logout() {
     this.authToken = null; // Set token to null
@@ -110,6 +119,16 @@ export class AuthService {
   loggedIn() {
     return tokenNotExpired();
   }
+
+  
+
+ /* // Function to store invitation's data in client local storage
+  storeInvitationData(token) {
+    localStorage.setItem('token', token); // Set token in local storage
+    //localStorage.setItem('user', JSON.stringify(email)); // Set user in local storage as string
+    this.authToken = token; // Assign token to be used elsewhere
+    //this.user = email; // Set user to be used elsewhere
+  }*/
 
   //Function to get generated random password
  /* getRandomPassword() {
