@@ -21,7 +21,7 @@
 				<td class="setup" attr.id="{{organization._id}}">
 					<button type="button" class="btn navbar-right baby" (click)="show = !show">Share Invitation</button>
 					<button type="button" class="btn navbar-right addOrgButton">Add New Member</button>
-					<button attr.id="{{organization._id}}" type="button" class="btn navbar-right addMember addOrgButton" [routerLink]="['/setup/']" (click)="getOrgname()">Members</button>
+					<button attr.id="{{organization._id}}" type="button" class="btn navbar-right addMember addOrgButton" [routerLink]="['/setup/']">Members</button>
 				</td>
 			</tr>
 			<!-- <tr>
@@ -39,12 +39,11 @@
 				<div class="form-group" *ngFor="let organization of organizations; trackBy: organization">
 					<div [ngClass]="{'has-error': (form.controls.email.errors && form.controls.email.dirty) || (!emailValid && form.controls.email.dirty), 'has-success': !form.controls.email.errors && emailValid}">
 						<form [formGroup]="form">
-							<p>Invite members to #this organization</p>
 							<div class="col-sm-9">
-								<input class="invitationInput" type="text" name="inviteEmail" class="form-control" formControlName="email" placeholder="Enter email addresses " size="100" (blur)="checkEmail()" />							
+								<input class="invitationInput" type="text" name="inviteEmail" class="form-control" formControlName="email" placeholder="Enter email addresses " size="100" [formControl]="form.controls['email']" (blur)="checkEmail()" />							
 							</div>
 							<div class="col-sm-3">
-								<button [disabled]="!form.valid || processing || !emailValid" class="invitesButton btn" type="submit" (click)="sendInvitation(organization)">Send Invitation</button>
+								<button [disabled]="!form.valid || processing || !emailValid" class="invitesButton btn" type="submit" (click)="sendInvitation(organization, form.value)">Send Invitation</button>
 							</div>
 							<div>
 								<ul class="help-block">

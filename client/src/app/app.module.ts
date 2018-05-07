@@ -26,6 +26,8 @@ import { AppModalComponent } from './components/app-modal/app-modal.component';
 import { OrganizationComponent } from './components/organization/organization.component';
 import { SetupComponent } from './components/organization/setup/setup.component';
 import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
+import { EmailService } from './services/email.service';
+
 
 
 
@@ -55,7 +57,7 @@ import { EditProfileComponent } from './components/profile/edit-profile/edit-pro
     AppRoutingModule,
     FlashMessagesModule
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, AuthorizeService, SetupService],
+  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, AuthorizeService, SetupService, EmailService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

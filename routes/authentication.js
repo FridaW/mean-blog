@@ -29,70 +29,77 @@ module.exports = (router) => {
         if (!req.body.password) {
           res.json({ success: false, message: 'You must provide a password' }); // Return error
         } else {
-          // Create new user object and apply user input
-          let user = new User({
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            email: req.body.email.toLowerCase(),
-            username: req.body.username.toLowerCase(),
-            password: req.body.password,
-            role: getAdmin(req.body.username.toLowerCase())
-            /*organization: {
-              orgId: organization._id,
-              name: organization.name,
-              codeName: organization.codeName
-            }*/          
-          });
-          function getAdmin(username) {
-            const defaultAdmin = ['frida', 'guo'];
-            const defaultManager = ['water', 'sky'];
-            if (defaultAdmin.indexOf(username) > -1) {
-              return 'admin';
-            } 
-            else if (defaultManager.indexOf(username) > -1){
-              return 'manager';
-            } 
-            else {
-              return 'user';
-            }
-          }
-          console.log('');
-          // Save user to database
-          user.save((err) => {
-            // Check if error occured
+          Organization.findOne({name: req.body.organization}, (err, organization) => {
             if (err) {
-              // Check if error is an error indicating duplicate account
-              if (err.code === 11000) {
-                res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
-              } else {
-                // Check if error is a validation rror
-                if (err.errors) {
-                  // Check if validation error is in the email field
-                  if (err.errors.email) {
-                    res.json({ success: false, message: err.errors.email.message }); // Return error
-                  } else {
-                    // Check if validation error is in the username field
-                    if (err.errors.username) {
-                      res.json({ success: false, message: err.errors.username.message }); // Return error
+              res.json({ success: false, message: err }); // Return connection error
+            } else {
+                // Create new user object and apply user input
+                let user = new User({
+                  firstname: req.body.firstname,
+                  lastname: req.body.lastname,
+                  email: req.body.email.toLowerCase(),
+                  username: req.body.username.toLowerCase(),
+                  password: req.body.password,
+                  role: getAdmin(req.body.username.toLowerCase()),
+                  organization: {
+                    orgId: organization._id,
+                    name: organization.name,
+                    codeName: organization.codeName
+                  }          
+                });
+                function getAdmin(username) {
+                  const defaultAdmin = ['frida', 'guo'];
+                  const defaultManager = ['water', 'sky'];
+                  if (defaultAdmin.indexOf(username) > -1) {
+                    return 'admin';
+                  } 
+                  else if (defaultManager.indexOf(username) > -1){
+                    return 'manager';
+                  } 
+                  else {
+                    return 'user';
+                  }
+                }
+                console.log('');
+                // Save user to database
+                user.save((err) => {
+                  // Check if error occured
+                  if (err) {
+                    // Check if error is an error indicating duplicate account
+                    if (err.code === 11000) {
+                      res.json({ success: false, message: 'Username or e-mail already exists' }); // Return error
                     } else {
-                      // Check if validation error is in the password field
-                      if (err.errors.password) {
-                        res.json({ success: false, message: err.errors.password.message }); // Return error
+                      // Check if error is a validation rror
+                      if (err.errors) {
+                        // Check if validation error is in the email field
+                        if (err.errors.email) {
+                          res.json({ success: false, message: err.errors.email.message }); // Return error
+                        } else {
+                          // Check if validation error is in the username field
+                          if (err.errors.username) {
+                            res.json({ success: false, message: err.errors.username.message }); // Return error
+                          } else {
+                            // Check if validation error is in the password field
+                            if (err.errors.password) {
+                              res.json({ success: false, message: err.errors.password.message }); // Return error
+                            } else {
+                              console.log('error');
+                              res.json({ success: false, message: err }); // Return any other error not already covered
+                            }
+                          }
+                        }
                       } else {
-                        console.log('error');
-                        res.json({ success: false, message: err }); // Return any other error not already covered
+                        res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
                       }
                     }
+                  } else {
+                    res.json({ success: true, message: 'Acount registered!' }); // Return success
                   }
-                } else {
-                  res.json({ success: false, message: 'Could not save user. Error: ', err }); // Return error if not related to validation
-                }
+                });
               }
-            } else {
-              res.json({ success: true, message: 'Acount registered!' }); // Return success
-            }
-          });
+           });
         }
+
       }
     }
   }
@@ -339,16 +346,6 @@ module.exports = (router) => {
     }
   });
 
-  router.post('/generatePassword/', (req, res) => {
-    if (!req.body.randomPassword){
-      res.json({ success: false, message: 'No password was provided.' });
-    }
-    else if (err) {
-      res.json({ success: false, message: err }); // Return error
-    } else {
-      res.json({ success: true, message: 'win' }); // Return success
-    };
-  });
 
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
@@ -396,16 +393,22 @@ module.exports = (router) => {
   router.post('/sendInvitation', (req, res) => {
     // Check if last name was provided
     // Create new user object and apply user input
-    let invitation = new Invitation({
-      link : getToken(),
+    const invitation = new Invitation({
+      token : getToken(),
       organization : req.body.organization,
       codeName : req.body.codeName,
-      email : req.body.email,     
+      email : req.body.email,
+      link: getLink(),
     });
 
     function getToken() {
       var uuid = require("uuid")
-      return uuid();
+      let uid = uuid();
+      return uid
+    }
+
+    function getLink() {
+      return 'http://localhost:4200/register_' + getToken()
     }
     
     invitation.save((err) => {
@@ -417,6 +420,43 @@ module.exports = (router) => {
       }
     });
   });
+
+  /*router.get('/getInvitation', (req, res) => {
+    
+      // Look for list of organization in database
+      Invitation.find().select('link').exec((err, invitation) => { // Check if connection error was found
+        if (err) {
+          res.json({ success: false, message: err }); // Return connection error
+        } else {
+          // return organization list
+          res.json({ success: true, invitations: invitation }); // Return success, send organization object to frontend for organizations
+        }
+      });
+    });*/
+
+ /* router.post('/checkInvitation', (req, res) => {
+    if (!req.body.link) {
+      res.json({ success: false, message: 'No link was provided' }); // Return error
+    } else {
+        Invitation.findOne({ link: req.body.link }, (err, invitation) => {
+          // Check if error was found
+          if ( err ) {
+            res.json({ success: false, message: err }); // Return error
+          } else {
+            // Check if username was found
+            if (!invitation) {
+              res.json({ success: false, message: 'Link not found.' }); // Return error
+            } else {
+              res.json({
+                    success: true,
+                    message: 'Success!'
+                  })
+            }
+            
+          }
+        }); 
+        }   
+  })*/
 
 
   /* ===============================================================
